@@ -98,8 +98,13 @@ def download_revisions(page: str, limit: int, data_dir: Path) -> None:
         if not revision_path.exists():
             revision_path.parent.mkdir(parents=True, exist_ok=True)
         revision_path.write_text(wiki_revision)
-    print("Done!")
+    numFiles = count_files(raw_revisions) 
+    print(f"Number of files downloaded: {numFiles}")
 
+#this will return an int
+def count_files(doc: str, folders: bool = False) -> int:
+    soup = BeautifulSoup(doc, 'lxml-xml')
+    return len(soup.find_all("revision"))
 
 def validate_page(page_name: str, page_xml: str) -> None:
     try:
@@ -109,6 +114,8 @@ def validate_page(page_name: str, page_xml: str) -> None:
 
 
 def main(page: str, limit: int, data_dir: Path, update: bool = False):
+
+
     """
     Downloads the main page (with revisions) for the given page title.
     Organizes the revisions into a folder structure like
